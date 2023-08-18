@@ -1,4 +1,5 @@
 import { SqlQuerySpec } from "@azure/cosmos";
+import { userHashedId } from "@/features/auth/helpers";
 import {
   CHAT_THREAD_ATTRIBUTE,
   ChatMessageModel,
@@ -14,7 +15,7 @@ export const FindAllChatThreadsForReporting = async (
   const container = await initDBContainer();
 
   const querySpec: SqlQuerySpec = {
-    query: `SELECT * FROM root r WHERE r.type=@type ORDER BY r.createdAt DESC OFFSET ${
+    query: `SELECT * FROM root r WHERE r.type=@type AND r.userId=@userId ORDER BY r.createdAt DESC OFFSET ${
       pageNumber * pageSize
     } LIMIT ${pageSize}`,
     parameters: [
@@ -22,6 +23,10 @@ export const FindAllChatThreadsForReporting = async (
         name: "@type",
         value: CHAT_THREAD_ATTRIBUTE,
       },
+      {
+        name: "@userId",
+        value: await userHashedId(),
+      }
     ],
   };
 
