@@ -169,7 +169,7 @@ export const ExtensionSimilaritySearch = async (props: {
       // and only include the fields that are in the fields array
 
       for (const key in document) {
-        const hasKey = vectors.includes(key) || key == "content";
+        const hasKey = vectors.includes(key);
         if (!hasKey) {
           newDocument[key] = document[key];
         }
@@ -177,7 +177,7 @@ export const ExtensionSimilaritySearch = async (props: {
 
       results.push({
         score: result.score,
-        document: newDocument, // Use the newDocument object instead of the original document
+        document: document, // Trying with original document instead
       });
     }
 
